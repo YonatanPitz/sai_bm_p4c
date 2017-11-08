@@ -265,8 +265,8 @@ class V1Model : public ::Model::Model {
 
             ingress("ingress", headersType, metadataType, standardMetadataType),
             egress("egress", headersType, metadataType, standardMetadataType),
-            egress_bridge("egress_bridge", headersType, metadataType, standardMetadataType),
             ingress_bridge("ingress_bridge", headersType, metadataType, standardMetadataType),
+            egress_bridge("egress_bridge", headersType, metadataType, standardMetadataType),
             ingress_router("ingress_router", headersType, metadataType, standardMetadataType),
             egress_router("egress_router", headersType, metadataType, standardMetadataType),
 

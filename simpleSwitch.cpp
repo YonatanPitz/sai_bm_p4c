@@ -29,7 +29,6 @@ using BMV2::mkArrayField;
 using BMV2::mkParameters;
 using BMV2::mkPrimitive;
 using BMV2::nextId;
-using namespace std; // omers
 namespace P4FLX {
 
 V1Model V1Model::instance; // inspired by p4c/frontends/p4/modelinstances.cpp [omers]
@@ -653,7 +652,6 @@ SimpleSwitch::setPipelineControls(const IR::ToplevelBlock* toplevel,
     auto egress_name = egress->to<IR::ControlBlock>()->container->name;
     controls->emplace(egress_name);
     map->emplace(egress_name, "egress");
-    cout << "omers - pushed flextrum controls" <<endl;
 }
 
 void
