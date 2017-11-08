@@ -68,9 +68,9 @@ class EnumOn32Bits : public P4::ChooseEnumRepresentation {
             unsigned line = type->srcInfo.getStart().getLineNumber();
             auto sfl = Util::InputSources::instance->getSourceLine(line);
             cstring sourceFile = sfl.fileName;
-            //if (sourceFile.endsWith(P4FLX::V1Model::instance.file.name))
+            if (sourceFile.endsWith(P4FLX::V1Model::instance.file.name))
                 // Don't convert any of the standard enums
-            //    return false;
+                return false;
         }
         return true;
     }

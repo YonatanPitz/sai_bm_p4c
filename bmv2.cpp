@@ -17,7 +17,6 @@ limitations under the License.
 #include <stdio.h>
 #include <string>
 #include <iostream>
-#include <Python.h>
 
 #include "ir/ir.h"
 #include "control-plane/p4RuntimeSerializer.h"
@@ -32,7 +31,7 @@ limitations under the License.
 #include "midend.h"
 #include "options.h"
 #include "JsonObjects.h"
-using namespace std;
+
 int main(int argc, char *const argv[]) {
     setup_gc_logging();
 
@@ -50,8 +49,6 @@ int main(int argc, char *const argv[]) {
     // BMV2 is required for compatibility with the previous compiler.
     options.preprocessor_options += " -D__TARGET_BMV2__";
     auto program = P4::parseP4File(options);
-
-
     if (program == nullptr || ::errorCount() > 0)
         return 1;
     try {
@@ -62,9 +59,9 @@ int main(int argc, char *const argv[]) {
         std::cerr << bug.what() << std::endl;
         return 1;
     }
-    if (program == nullptr || ::errorCount() > 0){
+    if (program == nullptr || ::errorCount() > 0)
         return 1;
-    }
+
     const IR::ToplevelBlock* toplevel = nullptr;
     BMV2::MidEnd midEnd(options);
     midEnd.addDebugHook(hook);
@@ -76,9 +73,8 @@ int main(int argc, char *const argv[]) {
         std::cerr << bug.what() << std::endl;
         return 1;
     }
-    if (::errorCount() > 0){
+    if (::errorCount() > 0)
         return 1;
-    }
 
     // backend depends on the modified refMap and typeMap from midEnd.
     BMV2::Backend backend(options.isv1(), &midEnd.refMap,
@@ -93,6 +89,7 @@ int main(int argc, char *const argv[]) {
     }
     if (::errorCount() > 0)
         return 1;
+
     if (!options.outputFile.isNullOrEmpty()) {
         std::ostream* out = openFile(options.outputFile, false);
         if (out != nullptr) {
@@ -100,6 +97,7 @@ int main(int argc, char *const argv[]) {
             out->flush();
         }
     }
+
     // Generate a PI control plane API for this program if requested.
     if (!options.p4RuntimeFile.isNullOrEmpty()) {
         std::ostream* out = openFile(options.p4RuntimeFile, false);
@@ -109,21 +107,5 @@ int main(int argc, char *const argv[]) {
         }
     }
 
-    //cout << "TODO run python flextrum compiler here" << endl;
-    // #include <Python.h> // flextrum : run python compiler
-
-    int py_argc;
-    char * py_argv[2];
-    py_argc = 2;
-    py_argv[0] = (char*)""; // path to flextrum git
-    py_argv[1] = (char*)options.outputFile.c_str();
-    
-    Py_SetProgramName((char*)"flextrum_json_compiler");
-    Py_Initialize();
-    PySys_SetArgv(py_argc, py_argv);
-    FILE *fd = fopen("backend/output_stage/P4_compiler.py", "r");
-    PyRun_SimpleFile(fd,"P4_compiler.py");
-    Py_Finalize();
-    fclose(fd);
     return ::errorCount() > 0;
 }
