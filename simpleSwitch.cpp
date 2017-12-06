@@ -201,8 +201,16 @@ SimpleSwitch::convertExternFunctions(Util::JsonArray *result,
         if (ei == nullptr) {
             ::error("%1%: must be a constant on this target", cloneType);
         } else {
-            cstring prim = ei->name == "I2E" ? "clone_ingress_bridge_pkt_to_egress" :
-                    "clone_egress_pkt_to_egress";
+            cstring prim;
+            if (ei->name == "IB2E") {
+                prim = "clone_ingress_bridge_pkt_to_egress";
+            } else if (ei->name == "IR2E") {
+                prim = "clone_ingress_router_pkt_to_egress";
+            } else { //if (ei->name == "ER2E") {
+                prim = "clone_egress_router_pkt_to_egress";
+            }
+            // cstring prim = ei->name == "I2E" ? "clone_ingress_bridge_pkt_to_egress" :
+                    // "clone_egress_bridge_pkt_to_egress";
             auto session = conv->convert(mc->arguments->at(1));
             auto primitive = mkPrimitive(prim, result);
             auto parameters = mkParameters(primitive);

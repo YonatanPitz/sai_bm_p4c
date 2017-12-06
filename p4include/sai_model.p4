@@ -124,8 +124,9 @@ extern action_selector {
 }
 
 enum CloneType {
-    I2E,
-    E2E
+    IB2E,
+    IR2E,
+    ER2E
 }
 
 extern void resubmit<T>(in T data);
